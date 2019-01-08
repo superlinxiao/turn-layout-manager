@@ -60,6 +60,17 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setStatus();
+
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+      }
+    });
+    initView();
+
+  }
+
+  private void initView() {
     setContentView(R.layout.activity_main);
     views = new Views(this);
     adapter = new SampleAdapter(this);
@@ -86,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
     views.controlsHandle.setOnClickListener(controlsHandleClickListener);
     views.list.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
-      private int center = DeviceUtil.getScreenWidth(MainActivity.this) / 2;
+      private int center = DeviceUtil.getRealScreenWidth(MainActivity.this) / 2;
 
       @Override
       public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -127,12 +138,11 @@ public class MainActivity extends AppCompatActivity {
           viewCenter = (childAt.getRight() + childAt.getLeft()) / 2;
           distance = Math.abs(viewCenter - center);
           scale = 0.5f * (1 + (center - distance) / center);
-//          childAt.setScaleX(scale);
-//          childAt.setScaleY(scale);
+          childAt.setScaleX(scale);
+          childAt.setScaleY(scale);
         }
       }
     });
-
   }
 
   private final SeekBar.OnSeekBarChangeListener radiusListener = new SeekBar.OnSeekBarChangeListener() {

@@ -1,10 +1,13 @@
 package cdflynn.android.sample.turn;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.LocaleList;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.WindowManager;
 
 import java.util.Locale;
 import java.util.UUID;
@@ -35,6 +38,29 @@ public class DeviceUtil {
   public static int getScreenWidth(Context context) {
     DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
     return displayMetrics.widthPixels;
+  }
+
+
+  /**
+   * 获取屏幕的宽度
+   *
+   * @param context
+   * @return
+   */
+  public static int getRealScreenWidth(Context context) {
+    WindowManager windowManager =
+        (WindowManager) context.getSystemService(Context.
+            WINDOW_SERVICE);
+    final Display display = windowManager.getDefaultDisplay();
+    Point outPoint = new Point();
+    if (Build.VERSION.SDK_INT >= 19) {
+      // 可能有虚拟按键的情况
+      display.getRealSize(outPoint);
+    } else {
+      // 不可能有虚拟按键
+      display.getSize(outPoint);
+    }
+    return outPoint.x;
   }
 
   /**
