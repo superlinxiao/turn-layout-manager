@@ -113,6 +113,9 @@ public class MainActivity extends AppCompatActivity {
           View childAt;
           for (int i = 0; i < views.list.getChildCount(); i++) {
             childAt = views.list.getChildAt(i);
+            if (childAt.getVisibility() == View.INVISIBLE) {
+              continue;
+            }
             viewCenter = (childAt.getRight() + childAt.getLeft()) / 2;
             viewDistance = Math.abs(viewCenter - center);
             if (viewDistance < lastDistance) {

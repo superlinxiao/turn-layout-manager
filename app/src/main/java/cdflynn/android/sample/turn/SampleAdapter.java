@@ -9,35 +9,40 @@ import android.widget.TextView;
 
 public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.SampleViewHolder> {
 
-    private final LayoutInflater layoutInflater;
+  private final LayoutInflater layoutInflater;
 
-    public SampleAdapter(Context context) {
-        this.layoutInflater = LayoutInflater.from(context);
+  public SampleAdapter(Context context) {
+    this.layoutInflater = LayoutInflater.from(context);
+  }
+
+  @Override
+  public SampleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    TextView sampleView = (TextView) layoutInflater.inflate(R.layout.view_sample, parent, false);
+    return new SampleViewHolder(sampleView);
+  }
+
+  @Override
+  public void onBindViewHolder(SampleViewHolder holder, int position) {
+    if (position < 3 || position > getItemCount() - 4) {
+      holder.itemView.setVisibility(View.INVISIBLE);
+    } else {
+      holder.itemView.setVisibility(View.VISIBLE);
     }
+    holder.tv.setText(Integer.toString(position));
+  }
 
-    @Override
-    public SampleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        TextView sampleView = (TextView) layoutInflater.inflate(R.layout.view_sample, parent, false);
-        return new SampleViewHolder(sampleView);
+  @Override
+  public int getItemCount() {
+    return 31;
+  }
+
+  class SampleViewHolder extends RecyclerView.ViewHolder {
+
+    TextView tv;
+
+    public SampleViewHolder(View itemView) {
+      super(itemView);
+      this.tv = (TextView) itemView;
     }
-
-    @Override
-    public void onBindViewHolder(SampleViewHolder holder, int position) {
-        holder.tv.setText(Integer.toString(position));
-    }
-
-    @Override
-    public int getItemCount() {
-        return 31;
-    }
-
-    class SampleViewHolder extends RecyclerView.ViewHolder {
-
-        TextView tv;
-
-        public SampleViewHolder(View itemView) {
-            super(itemView);
-            this.tv = (TextView) itemView;
-        }
-    }
+  }
 }
