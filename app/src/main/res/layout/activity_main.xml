@@ -13,6 +13,7 @@
     <include
         layout="@layout/controls"
         android:id="@+id/control_panel"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" />
@@ -24,6 +25,7 @@
         android:layout_above="@+id/control_panel"
         android:gravity="center_vertical"
         android:paddingStart="16dp"
+        android:visibility="gone"
         android:paddingEnd="16dp"
         android:clickable="true"
         android:background="@drawable/controls_selector"
