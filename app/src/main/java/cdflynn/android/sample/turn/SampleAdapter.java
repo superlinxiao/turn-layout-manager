@@ -10,6 +10,7 @@ import android.widget.TextView;
 public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.SampleViewHolder> {
 
   private final LayoutInflater layoutInflater;
+  private OnItemClickListener onItemClickListener;
 
   public SampleAdapter(Context context) {
     this.layoutInflater = LayoutInflater.from(context);
@@ -22,12 +23,21 @@ public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.SampleView
   }
 
   @Override
-  public void onBindViewHolder(SampleViewHolder holder, int position) {
+  public void onBindViewHolder(final SampleViewHolder holder, final int position) {
     if (position < 3 || position > getItemCount() - 4) {
       holder.itemView.setVisibility(View.INVISIBLE);
     } else {
       holder.itemView.setVisibility(View.VISIBLE);
     }
+
+    holder.itemView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (onItemClickListener != null) {
+          onItemClickListener.onItemClick(holder.itemView, position);
+        }
+      }
+    });
     holder.tv.setText(Integer.toString(position));
   }
 
@@ -45,4 +55,14 @@ public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.SampleView
       this.tv = (TextView) itemView;
     }
   }
+
+  public interface OnItemClickListener {
+    void onItemClick(View view, int position);
+  }
+
+  public void setOnItemClickListener(OnItemClickListener listener) {
+    onItemClickListener = listener;
+  }
+
+
 }

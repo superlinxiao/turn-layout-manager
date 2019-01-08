@@ -24,6 +24,11 @@ import cdflynn.android.library.turn.TurnLayoutManager;
 
 public class MainActivity extends AppCompatActivity {
 
+  /**
+   * 屏幕中心线的x坐标
+   */
+  private int center;
+
   static class Views {
     ViewGroup root;
     RecyclerView list;
@@ -60,14 +65,8 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setStatus();
-
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-      }
-    });
     initView();
-
+    center = DeviceUtil.getRealScreenWidth(MainActivity.this) / 2;
   }
 
   private void initView() {
@@ -85,6 +84,13 @@ public class MainActivity extends AppCompatActivity {
     views.list.setLayoutManager(layoutManager);
     views.list.setAdapter(adapter);
     adapter.notifyDataSetChanged();
+    adapter.setOnItemClickListener(new SampleAdapter.OnItemClickListener() {
+      @Override
+      public void onItemClick(View view, int position) {
+        int viewCenter = (view.getLeft() + view.getRight()) / 2;
+        views.list.smoothScrollBy(viewCenter - center, 0);
+      }
+    });
     views.radius.setOnSeekBarChangeListener(radiusListener);
     views.peek.setOnSeekBarChangeListener(peekListener);
     views.radius.setProgress(radius);
@@ -97,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
     views.controlsHandle.setOnClickListener(controlsHandleClickListener);
     views.list.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
-      private int center = DeviceUtil.getRealScreenWidth(MainActivity.this) / 2;
 
       @Override
       public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
