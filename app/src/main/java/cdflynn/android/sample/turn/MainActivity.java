@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -101,6 +102,13 @@ public class MainActivity extends AppCompatActivity {
     views.orientation.setAdapter(new OrientationAdapter(this, R.layout.spinner_item));
     views.rotate.setOnCheckedChangeListener(rotateListener);
     views.controlsHandle.setOnClickListener(controlsHandleClickListener);
+    views.list.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+      @Override
+      public void onGlobalLayout() {
+        onScrollIdle();
+        views.list.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+      }
+    });
     views.list.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
 
@@ -111,24 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
           //遍历所有的子View 计算出与中心线距离最近的View，并获取之间的距离，通过scrollBy方法移动过去，也可以通过Scroller添加动画效果
-          float lastDistance = center;
-          float nearestDistance = 0;
-          float viewCenter;
-          float viewDistance;
-          View childAt;
-          for (int i = 0; i < views.list.getChildCount(); i++) {
-            childAt = views.list.getChildAt(i);
-            if (childAt.getVisibility() == View.INVISIBLE) {
-              continue;
-            }
-            viewCenter = (childAt.getRight() + childAt.getLeft()) / 2;
-            viewDistance = Math.abs(viewCenter - center);
-            if (viewDistance < lastDistance) {
-              lastDistance = viewDistance;
-              nearestDistance = (viewCenter - center);
-            }
-          }
-          views.list.smoothScrollBy((int) nearestDistance, 0);
+          onScrollIdle();
         }
 
       }
@@ -151,6 +142,27 @@ public class MainActivity extends AppCompatActivity {
         }
       }
     });
+  }
+
+  private void onScrollIdle() {
+    float lastDistance = center;
+    float nearestDistance = 0;
+    float viewCenter;
+    float viewDistance;
+    View childAt;
+    for (int i = 0; i < views.list.getChildCount(); i++) {
+      childAt = views.list.getChildAt(i);
+      if (childAt.getVisibility() == View.INVISIBLE) {
+        continue;
+      }
+      viewCenter = (childAt.getRight() + childAt.getLeft()) / 2;
+      viewDistance = Math.abs(viewCenter - center);
+      if (viewDistance < lastDistance) {
+        lastDistance = viewDistance;
+        nearestDistance = (viewCenter - center);
+      }
+    }
+    views.list.smoothScrollBy((int) nearestDistance, 0);
   }
 
   private final SeekBar.OnSeekBarChangeListener radiusListener = new SeekBar.OnSeekBarChangeListener() {
