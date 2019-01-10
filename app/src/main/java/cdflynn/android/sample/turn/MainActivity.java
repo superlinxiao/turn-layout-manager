@@ -9,7 +9,9 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -109,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
         views.list.getViewTreeObserver().removeOnGlobalLayoutListener(this);
       }
     });
+
+    new LinearSnapHelper().attachToRecyclerView(views.list);
+
     views.list.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
 
@@ -117,7 +122,9 @@ public class MainActivity extends AppCompatActivity {
 
         super.onScrollStateChanged(recyclerView, newState);
 
-        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+        boolean isSize = layoutManager.findFirstVisibleItemPosition() < 3
+            || layoutManager.findLastVisibleItemPosition() > layoutManager.getItemCount() - 4;
+        if (newState == RecyclerView.SCROLL_STATE_IDLE && isSize) {
           //遍历所有的子View 计算出与中心线距离最近的View，并获取之间的距离，通过scrollBy方法移动过去，也可以通过Scroller添加动画效果
           onScrollIdle();
         }
