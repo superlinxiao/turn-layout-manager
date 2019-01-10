@@ -61,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private Views views;
-  private TurnLayoutManager layoutManager;
+  //  private TurnLayoutManager layoutManager;
+  private LinearLayoutManager layoutManager;
   private SampleAdapter adapter;
 
   @Override
@@ -78,12 +79,14 @@ public class MainActivity extends AppCompatActivity {
     adapter = new SampleAdapter(this);
     final int radius = (int) getResources().getDimension(R.dimen.list_radius);
     final int peek = (int) getResources().getDimension(R.dimen.list_peek);
-    layoutManager = new TurnLayoutManager(this,
-        TurnLayoutManager.Gravity.START,
-        TurnLayoutManager.Orientation.HORIZONTAL,
-        radius,
-        peek,
-        views.rotate.isChecked());
+//    layoutManager = new TurnLayoutManager(this,
+//        TurnLayoutManager.Gravity.START,
+//        TurnLayoutManager.Orientation.HORIZONTAL,
+//        radius,
+//        peek,
+//        views.rotate.isChecked());
+    layoutManager = new LinearLayoutManager(this);
+    layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
     views.list.setLayoutManager(layoutManager);
     views.list.setAdapter(adapter);
     adapter.notifyDataSetChanged();
@@ -114,6 +117,23 @@ public class MainActivity extends AppCompatActivity {
 
     new LinearSnapHelper().attachToRecyclerView(views.list);
 
+    views.list.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+      @Override
+      public void onGlobalLayout() {
+        int childCount = views.list.getChildCount();
+        if (childCount > 0) {
+          View childAt = views.list.getChildAt(childCount - 1);
+          int right = childAt.getRight() + ((ViewGroup.MarginLayoutParams) childAt.getLayoutParams()).rightMargin;
+          if (right <= center * 2) {
+            //无法滚动，设置listView的padding值，让view显示居中
+            int padding = (int) ((center * 2 - right) / 2f);
+            views.list.setPadding(padding, 0, padding, 0);
+          }
+        }
+        views.list.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+      }
+    });
+
     views.list.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
 
@@ -126,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
             || layoutManager.findLastVisibleItemPosition() > layoutManager.getItemCount() - 4;
         if (newState == RecyclerView.SCROLL_STATE_IDLE && isSize) {
           //遍历所有的子View 计算出与中心线距离最近的View，并获取之间的距离，通过scrollBy方法移动过去，也可以通过Scroller添加动画效果
-          onScrollIdle();
+//          onScrollIdle();
         }
 
       }
@@ -144,9 +164,18 @@ public class MainActivity extends AppCompatActivity {
           viewCenter = (childAt.getRight() + childAt.getLeft()) / 2;
           distance = Math.abs(viewCenter - center);
           scale = 0.5f * (1 + (center - distance) / center);
-          childAt.setScaleX(scale);
-          childAt.setScaleY(scale);
+//          childAt.setScaleX(scale);
+//          childAt.setScaleY(scale);
         }
+      }
+    });
+
+    final View viewById = findViewById(R.id.test_global);
+    viewById.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+      @Override
+      public void onGlobalLayout() {
+        Log.i("onDrawTest", "on global");
+        viewById.setPadding(10, 0, 0, 0);
       }
     });
   }
@@ -177,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
       views.radiusText.setText(getResources().getString(R.string.radius_format, progress));
       if (fromUser) {
-        layoutManager.setRadius(progress);
+//        layoutManager.setRadius(progress);
       }
     }
 
@@ -197,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
       views.peekText.setText(getResources().getString(R.string.peek_format, progress));
       if (fromUser) {
-        layoutManager.setPeekDistance(progress);
+//        layoutManager.setPeekDistance(progress);
       }
     }
 
@@ -237,10 +266,10 @@ public class MainActivity extends AppCompatActivity {
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
       switch (position) {
         case 0:
-          layoutManager.setGravity(TurnLayoutManager.Gravity.START);
+//          layoutManager.setGravity(TurnLayoutManager.Gravity.START);
           return;
         case 1:
-          layoutManager.setGravity(TurnLayoutManager.Gravity.END);
+//          layoutManager.setGravity(TurnLayoutManager.Gravity.END);
         default:
           // do nothing
       }
@@ -255,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
   private final CompoundButton.OnCheckedChangeListener rotateListener = new CompoundButton.OnCheckedChangeListener() {
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-      layoutManager.setRotate(isChecked);
+//      layoutManager.setRotate(isChecked);
     }
   };
 

@@ -11,24 +11,25 @@
         android:layout_height="match_parent" />
 
     <include
-        layout="@layout/controls"
         android:id="@+id/control_panel"
-        android:visibility="gone"
+        layout="@layout/controls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/control_handle"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_above="@+id/control_panel"
+        android:background="@drawable/controls_selector"
+        android:clickable="true"
         android:gravity="center_vertical"
         android:paddingStart="16dp"
-        android:visibility="gone"
         android:paddingEnd="16dp"
-        android:clickable="true"
-        android:background="@drawable/controls_selector"
-        android:text="@string/controls" />
+        android:text="@string/controls"
+        android:visibility="gone" />
+
 
 </RelativeLayout>

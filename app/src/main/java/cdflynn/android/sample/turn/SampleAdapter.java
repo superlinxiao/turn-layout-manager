@@ -24,11 +24,11 @@ public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.SampleView
 
   @Override
   public void onBindViewHolder(final SampleViewHolder holder, final int position) {
-    if (position < 3 || position > getItemCount() - 4) {
-      holder.itemView.setVisibility(View.INVISIBLE);
-    } else {
-      holder.itemView.setVisibility(View.VISIBLE);
-    }
+//    if (position < 3 || position > getItemCount() - 4) {
+//      holder.itemView.setVisibility(View.INVISIBLE);
+//    } else {
+//      holder.itemView.setVisibility(View.VISIBLE);
+//    }
 
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -43,7 +43,7 @@ public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.SampleView
 
   @Override
   public int getItemCount() {
-    return 31;
+    return 5;
   }
 
   class SampleViewHolder extends RecyclerView.ViewHolder {
